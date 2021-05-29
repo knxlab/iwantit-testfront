@@ -11,14 +11,23 @@
 
         <script type="text/javascript">
 
-            /*
             class State {
-                constructor(initialState)
-                getState()
-                setState(newState)
-                onChange(callback)
+                constructor(initialState){
+                    this.state = initialState;
+                    this.callback = function(){};
+                }
+                getState(){
+                    return this.state;
+                }
+                setState(newState){
+                    let state = Object.assign(this.state, newState);
+                    this.state = state;
+                    this.callback(state);
+                }
+                onChange(callback){
+                    this.callback = callback;
+                }
             }
-            */
 
             const initialState = {
                 email: "david@i-wantit.com",
