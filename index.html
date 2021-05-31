@@ -10,44 +10,54 @@
         <pre id='json'></pre>
 
         <script type="text/javascript">
-
-            /*
-            class State {
-                constructor(initialState)
-                getState()
-                setState(newState)
-                onChange(callback)
+        
+        class State {
+            constructor(initialState) {
+                this.state = initialState;
+                this.callback = [];
             }
-            */
-
-            const initialState = {
-                email: "david@i-wantit.com",
-                nom: "Quenet",
-                prenom: "David"
+            getState(){
+                return this.state;
             }
-            var state = new State(initialState);
+            setState(newState){
+                newState = Object.assign(this.state, newState);
+                this.state = newState;
 
-            ['email', 'prenom', 'nom'].forEach(key => {
-                const htmlElement = document.getElementById(key);
-                htmlElement.value = initialState[key];
-                htmlElement.addEventListener('input', () => {
-                    const newState = {};
-                    newState[key] = htmlElement.value;
-                    state.setState(newState)
-                });
-
-            })
-
-            const jsonHtmlElement = document.getElementById("json");
-            jsonHtmlElement.innerHTML = JSON.stringify(state.getState(), null, 4);
-            state.onChange(state => {
-                jsonHtmlElement.innerHTML = JSON.stringify(state, null, 4);
+                this.callback.forEach( callback => {
+                    callback(newState);
+                })
+            }
+            onChange(callback){
+                this.callback.push(callback);
+            }
+        }
+            
+        const initialState = {
+            email: "david@i-wantit.com",
+            nom: "Quenet",
+            prenom: "David"
+        }
+        var state = new State(initialState);
+        ['email', 'prenom', 'nom'].forEach(key => {
+            const htmlElement = document.getElementById(key);
+            htmlElement.value = initialState[key];
+            htmlElement.addEventListener('input', () => {
+                const newState = {};
+                newState[key] = htmlElement.value;
+                state.setState(newState);
             });
+        })
+        const jsonHtmlElement = document.getElementById("json");
+        jsonHtmlElement.innerHTML = JSON.stringify(state.getState(), null, 4);
+        state.onChange(state => {
+            jsonHtmlElement.innerHTML = JSON.stringify(state, null, 4);
+            console.log(state);
+        });
+ 
+        state.onChange(state => {
+            console.log(state);
+        });
 
-            state.onChange(state => {
-                console.log(state);
-            });
-
-        </script>
+    </script>
     </body>
 </html>
